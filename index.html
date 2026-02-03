@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Click the Spinner!</title>
+
+  <style>
+    :root{
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #334155;
+
+      --teal: #12c7bf;        /* panel background */
+      --spinnerDark: #0b6f6d; /* spinner body */
+      --capOuter: #9fd7d4;    /* outer cap */
+      --capInner: #35b8b1;    /* inner cap */
+      --center: #ffd400;      /* center button */
+
+      --shadow: 0 18px 40px rgba(0,0,0,.12);
+      --radius: 24px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    body{
+      margin:0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+    }
+
+    .wrap{
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+    }
+
+    h1{
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 46px);
+      letter-spacing: -0.02em;
+      line-height: 1.05;
+    }
+
+    .lead{
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 75ch;
+      font-size: 15.5px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .card{
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .card h2{
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .card p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14.8px;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin: 6px 0 16px;
+    }
+
+    .chip{
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #0f172a;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    /* Spinner panel */
+    .spinPanel{
+      border-radius: var(--radius);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      background: var(--teal);
+      padding: 22px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height: 420px;
+      position:relative;
+      gap: 10px;
+    }
+
+    .spinHint{
+      color: rgba(255,255,255,.92);
+      font-weight: 800;
+      margin: 0;
+      font-size: 22px;
+      text-shadow: 0 1px 0 rgba(0,0,0,.10);
+      letter-spacing: -0.01em;
+    }
+
+    .spinnerBtn{
+      border:none;
+      background: transparent;
+      cursor:pointer;
+      padding: 8px;
+      border-radius: 999px;
+      outline: none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .spinnerBtn:focus-visible{
+      box-shadow: 0 0 0 6px rgba(255,255,255,.35);
+    }
+
+    .spinner{
+      width: 520px;
+      max-width: 92%;
+      height: auto;
+      filter: drop-shadow(0 18px 18px rgba(0,0,0,.18));
+    }
+
+    /* Centered inner window */
+    .window{
+      width: min(92%, 720px);
+      border-radius: 999px;
+      padding: 22px;
+      border: 10px solid rgba(255,255,255,.28);
+      background: rgba(0,0,0,.04);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    /* spin around its own center */
+    #spinnerGraphic{
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+
+    .spin #spinnerGraphic{
+      animation: spin 0.35s linear infinite;
+    }
+
+    @keyframes spin{
+      to { transform: rotate(360deg); }
+    }
+
+    .controls{
+      display:flex;
+      gap: 14px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 6px;
+    }
+
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius: 22px;
+      padding: 16px 26px;
+      font-weight: 900;
+      font-size: 28px;
+      background: rgba(255,255,255,.88);
+      color: #0f172a;
+      box-shadow: 0 10px 20px rgba(0,0,0,.12);
+    }
+
+    .btn:active{ transform: translateY(1px); }
+
+    .counter{
+      color: rgba(255,255,255,.95);
+      font-weight: 900;
+      font-size: 28px;
+      background: rgba(0,0,0,.12);
+      padding: 16px 26px;
+      border-radius: 22px;
+      box-shadow: 0 10px 20px rgba(0,0,0,.10);
+    }
+
+    @media (max-width: 920px){
+      .grid{ grid-template-columns: 1fr; }
+      .spinPanel{ min-height: 380px; }
+      .btn, .counter{ font-size: 22px; padding: 14px 20px; }
+      .spinHint{ font-size: 18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Click the Spinner!</h1>
+    <p class="lead">Experience it hands on!</p>
+
+    <div class="grid">
+      <section class="card">
+        <h2>What it is</h2>
+        <p>
+          A fidget spinner is a small object with a center bearing that lets it spin smoothly. It became popular because it feels satisfying and repetitive.
+        </p>
+
+        <div class="chips">
+          <div class="chip">Feeling: satisfying</div>
+          <div class="chip">Action: repeatable</div>
+          <div class="chip">Place: social media</div>
+          <div class="chip">Question: focus or distraction?</div>
+        </div>
+
+        <p style="margin-bottom:0;">
+          One small toy turned into a huge moment. Some people saw it as calming. Others saw it as distracting. Same object but totally different reactions. No matter what reaction, take a trip back to 2017 and experience the fidget spinner hands on.
+        </p>
+      </section>
+
+      <aside class="spinPanel">
+        <p class="spinHint">Tap the spinner</p>
+
+        <div class="window">
+          <button class="spinnerBtn" id="spinClick" aria-label="Spin the fidget spinner">
+            <!-- Centered/cropped viewBox so the spinner sits in the middle -->
+            <svg class="spinner" id="spinnerSvg" viewBox="380 10 450 420" aria-hidden="true">
+              <g id="spinnerGraphic">
+                <!-- main dark body -->
+                <circle cx="520" cy="135" r="110" fill="var(--spinnerDark)"/>
+                <circle cx="680" cy="165" r="110" fill="var(--spinnerDark)"/>
+                <circle cx="575" cy="305" r="120" fill="var(--spinnerDark)"/>
+
+                <!-- connectors -->
+                <path d="M520 135 L680 165" stroke="var(--spinnerDark)" stroke-width="160" stroke-linecap="round"/>
+                <path d="M520 135 L575 305" stroke="var(--spinnerDark)" stroke-width="160" stroke-linecap="round"/>
+                <path d="M680 165 L575 305" stroke="var(--spinnerDark)" stroke-width="160" stroke-linecap="round"/>
+
+                <!-- caps -->
+                <circle cx="520" cy="135" r="68" fill="var(--capOuter)"/>
+                <circle cx="680" cy="165" r="68" fill="var(--capOuter)"/>
+                <circle cx="575" cy="305" r="70" fill="var(--capOuter)"/>
+
+                <circle cx="520" cy="135" r="38" fill="var(--capInner)"/>
+                <circle cx="680" cy="165" r="38" fill="var(--capInner)"/>
+                <circle cx="575" cy="305" r="40" fill="var(--capInner)"/>
+
+                <!-- center -->
+                <circle cx="605" cy="220" r="58" fill="var(--center)"/>
+                <circle cx="605" cy="220" r="44" fill="rgba(0,0,0,.10)"/>
+              </g>
+            </svg>
+          </button>
+        </div>
+
+        <div class="controls">
+          <button class="btn" id="spinBtn" type="button">Spin</button>
+          <button class="btn" id="slowBtn" type="button">Slow</button>
+          <button class="btn" id="fastBtn" type="button">Fast</button>
+          <div class="counter">Spins: <span id="count">0</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const spinClick = document.getElementById("spinClick");
+    const spinnerSvg = document.getElementById("spinnerSvg");
+    const countEl = document.getElementById("count");
+
+    const spinBtn = document.getElementById("spinBtn");
+    const slowBtn = document.getElementById("slowBtn");
+    const fastBtn = document.getElementById("fastBtn");
+
+    let spins = 0;
+    let timer = null;
+
+    let durationMs = 2500;
+    let speedSec = 0.35;
+
+    function startSpin(){
+      const group = document.getElementById("spinnerGraphic");
+      group.style.animationDuration = speedSec + "s";
+
+      spinnerSvg.classList.remove("spin");
+      void spinnerSvg.offsetWidth;
+      spinnerSvg.classList.add("spin");
+
+      spins++;
+      countEl.textContent = String(spins);
+
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(() => {
+        spinnerSvg.classList.remove("spin");
+      }, durationMs);
+    }
+
+    spinClick.addEventListener("click", startSpin);
+
+    spinClick.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        startSpin();
+      }
+    });
+
+    spinBtn.addEventListener("click", () => {
+      durationMs = 2500;
+      speedSec = 0.35;
+      startSpin();
+    });
+
+    slowBtn.addEventListener("click", () => {
+      durationMs = 3500;
+      speedSec = 0.60;
+      startSpin();
+    });
+
+    fastBtn.addEventListener("click", () => {
+      durationMs = 2000;
+      speedSec = 0.22;
+      startSpin();
+    });
+  </script>
+</body>
+</html>
